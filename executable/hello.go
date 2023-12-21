@@ -50,26 +50,11 @@ func getMapParameters(finalURL string) map[string]string {
 	}
 	return m
 }
-func testInternet() error {
-	resp, err := http.Get(googleURL)
-	if err != nil { return err }
-	defer resp.Body.Close()
-
-	if resp.StatusCode == http.StatusOK { return nil }
-	return fmt.Errorf("Request failed with status code: %d", resp.StatusCode)
-}
 
 func main() {
 	for {
-		if err := testInternet(); err == nil {
-			fmt.Println("Request successful. Sleeping infinitely...")
-			select {} // Sleep infinitely
-		} else {
-			fmt.Printf("Internet Error: %v. Retrying in %s...\n", err, retryInterval)
-
-			err := fetch()
-			if err != nil { fmt.Printf("Unlock Error: %v.\n", err) }
-			time.Sleep(retryInterval)
-		}
+		err := fetch()
+		if err != nil { fmt.Printf("Unlock Error: %v.\n", err) }
+		time.Sleep(retryInterval)
 	}
 }
